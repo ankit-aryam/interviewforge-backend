@@ -1,16 +1,18 @@
 package com.interviewforge.backend.controller;
 
+import com.interviewforge.backend.dto.CreateProblemRequest;
+import com.interviewforge.backend.dto.ProblemResponse;
 import com.interviewforge.backend.entity.Problem;
 import com.interviewforge.backend.service.ProblemService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/problems")
@@ -20,7 +22,7 @@ public class ProblemController {
     private final ProblemService problemService;
 
     @GetMapping
-    public Page<Problem> getProblems(
+    public Page<ProblemResponse> getProblems(
             @RequestParam(required = false) String difficulty,
             @RequestParam(required = false) String tag,
             @RequestParam(defaultValue = "0") int page,
@@ -36,5 +38,14 @@ public class ProblemController {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         return problemService.getProblems(difficulty, tag, pageable);
+    }
+
+    @PostMapping
+    public ResponseEntity<ProblemResponse> createProblem(
+            @RequestBody @Valid CreateProblemRequest request
+            ){
+        ProblemResponse response = problemService.createProblem(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

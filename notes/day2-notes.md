@@ -7,3 +7,4 @@ Answer: If both filters are null, Specification returns null predicates, and Spr
 Answer: Indexes on difficulty and created_at improve query performance. Difficulty index speeds up filtering, and created_at index improves sorting performance, reducing database scan time significantly.
 4. Why returning Page<Problem> is better than List<Problem>? <br>
 Answer: Page is better than List because it supports pagination and provides metadata like total elements and total pages. It improves performance by loading only required records instead of the entire dataset.
+
