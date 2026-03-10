@@ -3,6 +3,12 @@ spring:
     url: jdbc:postgresql://localhost:5432/interviewforge
     username: postgres
     password: POSTWERT654TiTY
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  cache:
+    type: redis
 
   jpa:
     hibernate:

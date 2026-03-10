@@ -26,14 +26,15 @@ public class ProblemController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<Page<ProblemResponse>>> getProblems(
-            @RequestParam(required = false) String difficulty,
-            @RequestParam(required = false) String tag,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "createdAt") String sortBy,
-            @RequestParam(defaultValue = "desc") String direction
+            @RequestParam(name = "difficulty", required = false) String difficulty,
+            @RequestParam(name = "tag", required = false) String tag,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size,
+            @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy,
+            @RequestParam(name = "direction", defaultValue = "desc") String direction
     ) {
 
+        System.out.println("Ye chala");
         Sort sort = direction.equalsIgnoreCase("asc")
                 ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();

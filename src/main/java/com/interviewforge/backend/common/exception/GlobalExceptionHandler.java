@@ -30,11 +30,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleGeneric(
             Exception ex
     ) {
+        ex.printStackTrace();
 
         ApiResponse<Void> response =
                 ApiResponse.<Void>builder()
                         .success(false)
-                        .error("Internal Server Error")
+                        .error(ex.getMessage() != null ? ex.getMessage() : "Internal Server Error")
                         .timestamp(LocalDateTime.now())
                         .build();
 

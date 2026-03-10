@@ -2,6 +2,7 @@ package com.interviewforge.backend.dto;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProblemResponse {
+public class ProblemResponse implements Serializable {
 
     private Long id;
     private String title;

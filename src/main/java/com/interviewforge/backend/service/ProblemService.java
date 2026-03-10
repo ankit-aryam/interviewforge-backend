@@ -7,6 +7,8 @@ import com.interviewforge.backend.mapper.ProblemMapper;
 import com.interviewforge.backend.repository.ProblemRepository;
 import com.interviewforge.backend.specification.ProblemSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,12 +22,14 @@ public class ProblemService {
 
     private final ProblemRepository problemRepository;
 
+    @Cacheable(value = "problems",
+            key = "#difficulty + '-' + #tag + '-' + #pageable.pageNumber")
     public Page<ProblemResponse> getProblems(
             String difficulty,
             String tag,
             Pageable pageable
     ) {
-
+        System.out.println("ye bhi chal rha");
         Specification<Problem> spec =
                 Specification.where(
                         ProblemSpecification.hasDifficulty(difficulty)
@@ -34,9 +38,12 @@ public class ProblemService {
                 );
 
         Page<Problem> problems = problemRepository.findAll(spec, pageable);
+
+        System.out.println("Problems: "+problems);
         return problems.map(ProblemMapper::toResponse);
     }
 
+    @CacheEvict(value = "problems", allEntries = true)
     public ProblemResponse createProblem(CreateProblemRequest request) {
 
         Problem problem = Problem.builder()
