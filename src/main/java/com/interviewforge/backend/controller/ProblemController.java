@@ -1,9 +1,9 @@
 package com.interviewforge.backend.controller;
 
 import com.interviewforge.backend.common.dto.ApiResponse;
+import com.interviewforge.backend.common.dto.PageResponse;
 import com.interviewforge.backend.dto.CreateProblemRequest;
 import com.interviewforge.backend.dto.ProblemResponse;
-import com.interviewforge.backend.entity.Problem;
 import com.interviewforge.backend.service.ProblemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +25,13 @@ public class ProblemController {
     private final ProblemService problemService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<ProblemResponse>>> getProblems(
-            @RequestParam(required = false) String difficulty,
-            @RequestParam(required = false) String tag,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "createdAt") String sortBy,
-            @RequestParam(defaultValue = "desc") String direction
+    public ResponseEntity<ApiResponse<PageResponse<ProblemResponse>>> getProblems(
+            @RequestParam(name = "difficulty", required = false) String difficulty,
+            @RequestParam(name = "tag", required = false) String tag,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size,
+            @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy,
+            @RequestParam(name = "direction", defaultValue = "desc") String direction
     ) {
 
         Sort sort = direction.equalsIgnoreCase("asc")
@@ -40,13 +40,13 @@ public class ProblemController {
 
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<ProblemResponse> response =
-                problemService.getProblems(difficulty, tag, pageable);
+        Page<ProblemResponse> pageResult = problemService.getProblems(difficulty, tag, pageable);
+        PageResponse<ProblemResponse> pageResponse = PageResponse.from(pageResult);
 
-        ApiResponse<Page<ProblemResponse>> apiResponse =
-                ApiResponse.<Page<ProblemResponse>>builder()
+        ApiResponse<PageResponse<ProblemResponse>> apiResponse =
+                ApiResponse.<PageResponse<ProblemResponse>>builder()
                         .success(true)
-                        .data(response)
+                        .data(pageResponse)
                         .timestamp(LocalDateTime.now())
                         .build();
 
