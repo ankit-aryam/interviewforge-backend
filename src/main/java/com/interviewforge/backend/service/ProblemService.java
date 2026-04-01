@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 public class ProblemService {
 
     private final ProblemRepository problemRepository;
+    private final ProblemEventProducer producer;
 
     @Cacheable(value = "problems",
             key = "#difficulty + '-' + #tag + '-' + #pageable.pageNumber")
@@ -61,6 +62,7 @@ public class ProblemService {
 
         Problem saved = problemRepository.save(problem);
 
+        producer.sendProblemCreatedEvent("Problem created: " + saved.getId());
         return ProblemMapper.toResponse(saved);
     }
 }
